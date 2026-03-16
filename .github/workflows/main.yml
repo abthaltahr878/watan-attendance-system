@@ -20,7 +20,8 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install PyQt5==5.15.11 pandas==2.2.2 numpy pyzk pyinstaller==6.10.0 openpyxl pyodbc
+        # استخدام نسخ مستقرة جداً لضمان عمل ملف الـ EXE بدون أخطاء Numpy
+        pip install PyQt5==5.15.10 pandas==1.5.3 numpy==1.23.5 pyzk pyinstaller==6.3.0 openpyxl pyodbc
 
     - name: Build EXE with PyInstaller
       run: |
@@ -32,6 +33,7 @@ jobs:
         --hidden-import="PyQt5.sip" `
         --hidden-import="zk" `
         --hidden-import="zk.base" `
+        --hidden-import="openpyxl" `
         --name "Watan_Attendance_Final" main.py
 
     - name: Upload Artifact
