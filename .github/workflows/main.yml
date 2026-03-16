@@ -1,0 +1,41 @@
+name: Build_Watan_Attendance_System
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install PyQt5==5.15.11 pandas==2.2.2 numpy pyzk pyinstaller==6.10.0 openpyxl pyodbc
+
+    - name: Build EXE with PyInstaller
+      run: |
+        pyinstaller --noconfirm --onefile --windowed `
+        --icon="icon.ico" `
+        --add-data "logo.jpg;." `
+        --add-data "styles.py;." `
+        --hidden-import="pandas" `
+        --hidden-import="PyQt5.sip" `
+        --hidden-import="zk" `
+        --hidden-import="zk.base" `
+        --name "Watan_Attendance_Final" main.py
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Final_Program_EXE
+        path: dist/Watan_Attendance_Final.exe
